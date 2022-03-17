@@ -1,0 +1,34 @@
+import styled from 'styled-components'
+import { sizes, color, font } from '../../_styles'
+
+export const Input = styled.input`
+  ${font.sizes.nav()}
+  min-width: ${sizes.large};
+  color: ${color.black1};
+  border: 0.5px solid ${color.gray4};
+  padding: ${sizes.base};
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:focus,
+  &:active {
+    outline: none;
+    border: 0.5px solid ${color.blue3};
+  }
+
+  &::placeholder {
+    color: ${color.black3};
+  }
+
+  &:disabled {
+    border: 0.5px solid ${color.gray4};
+    color: ${color.black3};
+    opacity: 0.5;
+  }
+
+  &:disabled:hover {
+    cursor: not-allowed;
+  }
+`
