@@ -1,10 +1,15 @@
 import React from 'react'
 import { GlobalStyles } from '../_styles'
 import { ComicsList } from './ComicsList'
+import { Character } from '../../api'
 
-export const Root = () => (
+interface Props {
+  characters: Character[]
+}
+
+export const Root = ({ characters }: Props) => (
   <div>
     <GlobalStyles />
-    <ComicsList />
+    <ComicsList characters={characters} />
   </div>
 )

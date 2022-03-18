@@ -1,8 +1,13 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { Root } from '../src/ui/Home'
+import { api, Character } from '../src/api'
 
-const Home: NextPage = () => {
+interface Props {
+  characters: Character[]
+}
+
+const Home: NextPage<Props> = ({ characters }) => {
   return (
     <div>
       <Head>
@@ -10,9 +15,18 @@ const Home: NextPage = () => {
         <meta name="description" content="Filter list" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Root />
+      <Root characters={characters} />
     </div>
   )
+}
+
+export const getStaticProps = async () => {
+  const result = await api.characters()
+  return {
+    props: {
+      characters: result
+    }
+  }
 }
 
 export default Home
