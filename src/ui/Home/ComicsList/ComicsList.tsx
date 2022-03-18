@@ -1,54 +1,56 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Input } from '../../_components/Input'
 import { Text } from '../../_components/Text'
 import { sizes } from '../../_styles'
+import { Comic as ComicModel } from '../../../core/domain/model/Comic/Comic'
+import { comicService } from '../../../core/infrastructure/services/Comic/comicService'
+import Link from 'next/link'
 
-const comics = [
-  {
-    id: 45977,
-    title: 'Captain America (2012) #11',
-    characters: ['Captain America']
-  },
-  {
-    id: 43722,
-    title: 'Captain America (2012) #1',
-    characters: ['Captain America']
-  },
-  {
-    id: 40391,
-    title: 'Captain America (2011) #18',
-    characters: ['Captain America']
-  },
-  {
-    id: 43339,
-    title: 'Uncanny Avengers (2012) #1',
-    characters: ['Captain America', 'Havok', 'Rogue', 'Scarlet Witch', 'Thor', 'Wolverine']
-  }
-]
+export const ComicsList = () => {
+  const [comics, setComics] = React.useState<ComicModel[]>([])
 
-export const ComicsList = () => (
-  <Layout>
-    <Text As="h1" weight="black" size="h1" marginBottom="small">
-      Buscador de cómics de Marvel
-    </Text>
-    <Text As="p" size="large" marginBottom="large">
-      Este buscador encontrará los cómics en los que aparezcan los dos personajes que selecciones en el formulario
-    </Text>
-    <Text As="p" size="medium" marginBottom="base">
-      Escribe un personaje en la lista
-    </Text>
-    <ComicInput />
-    {comics.map(comic => (
-      <Comic key={comic.id}>
-        <Text As="p" weight="bold">
-          {comic.title}
-        </Text>
-        <Text as="p">{comic.characters.join(', ')}</Text>
-      </Comic>
-    ))}
-  </Layout>
-)
+  React.useEffect(() => {
+    async function fetchComics() {
+      setComics(await comicService.all())
+    }
+
+    fetchComics()
+  }, [])
+
+  return (
+    <Layout>
+      <Text as="h1" weight="black" size="h1" marginBottom="small">
+        Cómics de Marvel
+      </Text>
+      <hr />
+      <br />
+      <List comics={comics} />
+    </Layout>
+  )
+}
+
+interface ListProps {
+  comics: ComicModel[]
+}
+
+const List = ({ comics }: ListProps) => {
+  return (
+    <>
+      {
+        comics.map(comic => (
+          <Link key={comic.id} href={`/detail/${comic.id}`}>
+            <Comic>
+              <Text as="p" weight="bold">
+                {comic.title}
+              </Text>
+              <Text as="p">{comic.characters.join(', ')}</Text>
+            </Comic>
+          </Link>
+        ))
+      }
+    </>
+  )
+}
 
 const Layout = styled.div`
   max-width: 1140px;
@@ -57,10 +59,6 @@ const Layout = styled.div`
   padding-right: 15px;
   padding-left: 15px;
   width: 100%;
-`
-
-const ComicInput = styled(Input)`
-  margin-bottom: ${sizes.base};
 `
 
 const Comic = styled.div`
