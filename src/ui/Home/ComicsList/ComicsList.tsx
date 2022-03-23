@@ -1,9 +1,8 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Input } from '../../_components/Input'
 import { Text } from '../../_components/Text'
 import { sizes } from '../../_styles'
-
 const comics = [
   {
     id: 45977,
@@ -27,29 +26,48 @@ const comics = [
   }
 ]
 
-export const ComicsList = () => (
-  <Layout>
-    <Text as="h1" weight="black" size="h1" marginBottom="small">
-      Buscador de cómics de Marvel
-    </Text>
-    <Text as="p" size="large" marginBottom="large">
-      Este buscador encontrará los cómics en los que aparezcan los dos personajes que selecciones en el formulario
-    </Text>
-    <Text as="p" size="medium" marginBottom="base">
-      Escribe un personaje en la lista
-    </Text>
-    <ComicInput />
-    {comics.map(comic => (
-      <Comic key={comic.id}>
-        <Text as="p" weight="bold">
-          {comic.title}
-        </Text>
-        <Text as="p">{comic.characters.join(', ')}</Text>
-      </Comic>
-    ))}
-  </Layout>
-)
+export const ComicsList = () => {
+  const [term, setTerm] = useState('')
 
+  // useEffect(() => {
+  //   filteredComics = comics.filter((item) => item.title.toLowerCase().includes(term.toLowerCase()));
+  //   console.log (filteredComics)
+  // })
+  
+  const handleinputChange = (event: any) => setTerm(event.target.value)
+
+  const handleCleanSearch = () => setTerm('')
+
+  const handleCacafuti = () => setTerm('2011')
+    
+  return (
+    <Layout>
+      <Text as="h1" weight="black" size="h1" marginBottom="small">
+        Buscador de cómics de Marvel
+      </Text>
+      <Text as="p" size="large" marginBottom="large">
+        Este buscador encontrará los cómics en los que aparezcan los dos personajes que selecciones en el formulario
+      </Text>
+      <Text as="p" size="medium" marginBottom="base">
+        Escribe un personaje en la lista
+      </Text>
+
+      <ComicInput id="comicInput" onChange={handleinputChange} value={term} />
+      <button onClick={handleCleanSearch} >Limpiar búsqueda</button>
+      <button onClick={handleCacafuti}>2011</button>
+      
+      { comics.filter((item) => item.title.toLowerCase().includes(term.toLowerCase()))
+        .map(comic => (
+        <Comic key={comic.id}>
+          <Text as="p" weight="bold">
+            {comic.title}
+          </Text>
+          <Text as="p">{comic.characters.join(', ')}</Text>
+        </Comic>
+      )) }
+      <Text as="p">Elementos en la lista: { comics.length }</Text>
+    </Layout>
+)}
 const Layout = styled.div`
   max-width: 1140px;
   margin-right: auto;
@@ -58,11 +76,9 @@ const Layout = styled.div`
   padding-left: 15px;
   width: 100%;
 `
-
 const ComicInput = styled(Input)`
   margin-bottom: ${sizes.base};
 `
-
 const Comic = styled.div`
   margin-bottom: ${sizes.base};
 `
